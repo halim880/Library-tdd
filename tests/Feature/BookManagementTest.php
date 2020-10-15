@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Book;
-class BookReservationTest extends TestCase
+class BookManagementTest extends TestCase
 {
     use RefreshDatabase;
     /** @test */
@@ -16,7 +16,25 @@ class BookReservationTest extends TestCase
             'title'=> 'Algorithm & Datastructure',
             'author'=> 'Abdul halim'
         ]);
-        $response->assertOk();
+        $this->assertCount(1, Book::all());
+        $response->assertRedirect('/books/'.Book::first()->id);
+    }
+
+    /** @test */
+    public function title_is_required(){
+        $response = $this->post('/books', [
+            'title'=> 'Algorithm & datastructure',
+            'author'=> 'Abdul halim'
+        ]);
+        $this->assertCount(1, Book::all());
+    }
+
+    /** @test */
+    public function author_is_required(){
+        $response = $this->post('/books', [
+            'title'=> 'Algorithm & datastructure',
+            'author'=> 'Abdul Halim'
+        ]);
         $this->assertCount(1, Book::all());
     }
 
@@ -38,6 +56,7 @@ class BookReservationTest extends TestCase
 
         $this->assertEquals('New title', Book::first()->title);
         $this->assertEquals('New author', Book::first()->author);
+        $response->assertRedirect('/books/'.$book->id);
     }
 
     /** @test */
@@ -54,5 +73,6 @@ class BookReservationTest extends TestCase
         $response = $this->delete('/books/'.$book->id);
 
         $this->assertCount(0, Book::all());
+        $response->assertRedirect('/books');
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
+use App\Models\Author;
 use Illuminate\Http\Request;
 
-class BooksController extends Controller
+class AuthorController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,19 +33,20 @@ class BooksController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        $book = Book::create($this->validateRequest());
-        return redirect($book->path);
+        Author::create(request()->only([
+            'name', 'dob'
+        ]));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Book  $book
+     * @param  \App\Models\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function show(Book $book)
+    public function show(Author $author)
     {
         //
     }
@@ -53,10 +54,10 @@ class BooksController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Book  $book
+     * @param  \App\Models\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function edit(Book $book)
+    public function edit(Author $author)
     {
         //
     }
@@ -65,32 +66,29 @@ class BooksController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Book  $book
+     * @param  \App\Models\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Author $author)
     {
-        $book->update($this->validateRequest());
-        return redirect($book->path);
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Book  $book
+     * @param  \App\Models\Author  $author
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy(Author $author)
     {
-        $book->delete();
-        return redirect('/books');
+        //
     }
-
 
     public function validateRequest(){
         return request()->validate([
-            'title' => 'required',
-            'author'=> 'required'
+            'name' => 'required',
+            'dob' => 'required',
         ]);
     }
 }
